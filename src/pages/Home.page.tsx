@@ -52,7 +52,7 @@ export function HomePage() {
         <section className="h-44 w-full bg-gradient-to-r from-[#000510] via-[#4e0b1c] to-[#000510]">
           <div className="flex justify-center items-center h-full space-x-4">
             <div>
-              <img src="/public/images/popcorn_img.png" alt="popcorn_img" />
+              <img src="/images/popcorn_img.png" alt="popcorn_img" />
             </div>
             <div>
               <h1 className="text-white font-bold text-xl">The Netflix you love for just $6.39</h1>
