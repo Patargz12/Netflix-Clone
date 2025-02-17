@@ -55,26 +55,36 @@ export default function LoginForm() {
         {/* Form with submit handler */}
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Username input field */}
-          <Input
-            type="text"
-            name="username"
-            required
-            value={credentials.username}
-            onChange={handleChange}
-            placeholder="mor_2314"
-            className="h-[40px] bg-[#333333] border-0 rounded-[4px] text-white placeholder:text-[#8c8c8c] text-base px-5"
-          />
+          <div>
+            <h2 className="text-sm mb-1">
+              Username: <span className="text-gray-400">( mor_2314 )</span>{' '}
+            </h2>
+            <Input
+              type="text"
+              name="username"
+              required
+              value={credentials.username}
+              onChange={handleChange}
+              placeholder="mor_2314"
+              className="h-[40px] bg-[#333333] border-0 rounded-[4px] text-white placeholder:text-[#8c8c8c] text-base px-5"
+            />
+          </div>
 
           {/* Password input field */}
-          <Input
-            type="password"
-            name="password"
-            required
-            value={credentials.password}
-            onChange={handleChange}
-            placeholder="83r5^_"
-            className="h-[40px] bg-[#333333] border-0 rounded-[4px] text-white placeholder:text-[#8c8c8c] text-base px-5"
-          />
+          <div>
+            <h2 className="text-sm mb-1">
+              Password: <span className="text-gray-400">( 83r5^_ ) </span>
+            </h2>
+            <Input
+              type="password"
+              name="password"
+              required
+              value={credentials.password}
+              onChange={handleChange}
+              placeholder="83r5^_"
+              className="h-[40px] bg-[#333333] border-0 rounded-[4px] text-white placeholder:text-[#8c8c8c] text-base px-5"
+            />
+          </div>
 
           {/* Submit button with loading state */}
           <Button
