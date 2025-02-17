@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { UserCircle2 } from 'lucide-react';
-import { Profile } from '../types/profile';
+import { Profile } from '@/types/profile/user';
 
 interface ProfileCardProps {
   profile: Profile;

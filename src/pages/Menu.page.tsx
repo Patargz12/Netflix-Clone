@@ -32,7 +32,9 @@ const fetchMovies = async (endpoint: string): Promise<MovieResponse> => {
 
 // Search movies from TMDB
 const searchMovies = async (query: string): Promise<Movie[]> => {
-  if (!query) return [];
+  if (!query) {
+    return [];
+  }
 
   const options = {
     method: 'GET',
@@ -59,7 +61,9 @@ const searchMovies = async (query: string): Promise<Movie[]> => {
 
 // Get similar movies
 const getSimilarMovies = async (movieId: number): Promise<Movie[]> => {
-  if (!movieId) return [];
+  if (!movieId) {
+    return [];
+  }
 
   const options = {
     method: 'GET',
@@ -84,7 +88,9 @@ const getSimilarMovies = async (movieId: number): Promise<Movie[]> => {
 
 // Get recommended movies
 const getRecommendedMovies = async (movieId: number): Promise<Movie[]> => {
-  if (!movieId) return [];
+  if (!movieId) {
+    return [];
+  }
 
   const options = {
     method: 'GET',
@@ -134,14 +140,14 @@ export const MenuPage = () => {
   // Fetch similar movies based on the first search result
   const { data: similarMovies } = useQuery({
     queryKey: ['similar-movies', searchResults?.[0]?.id],
-    queryFn: () => getSimilarMovies(searchResults?.[0]?.id),
+    queryFn: () => getSimilarMovies(searchResults?.[0]?.id as number),
     enabled: !!searchResults?.[0]?.id && !!searchQuery,
   });
 
   // Fetch recommended movies based on the first search result
   const { data: recommendedMovies } = useQuery({
     queryKey: ['recommended-movies', searchResults?.[0]?.id],
-    queryFn: () => getRecommendedMovies(searchResults?.[0]?.id),
+    queryFn: () => getRecommendedMovies(searchResults?.[0]?.id as number),
     enabled: !!searchResults?.[0]?.id && !!searchQuery,
   });
 
@@ -311,7 +317,7 @@ export const MenuPage = () => {
             <>
               <PopularGrid
                 title="Popular Now"
-                movies={popularMovies.results}
+                movies={popularMovies?.results || []}
                 onMovieSelect={setSelectedMovie}
                 usePosters
               />

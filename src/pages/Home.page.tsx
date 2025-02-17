@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
+import Content from '@/components/Cms/Content';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import Content from '../components/Cms/content';
 import Faq from '../components/Cms/Faq';
 import Footer from '../components/Layouts/Footer';
 import GuestNavbar from '../components/Layouts/GuestNavbar';
