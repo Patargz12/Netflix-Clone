@@ -76,33 +76,30 @@
   pointer-events: none;
 }
 
-/* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
   .react-player {
     transform: translate(-50%, -50%) scale(1.5) !important;
   }
 }
 
-/* Large devices (desktops, 1024px and up) */
 @media (min-width: 1024px) {
   .react-player {
     transform: translate(-50%, -50%) scale(1.2) !important;
   }
 }
 
-/* Custom scrollbar styles */
 ::-webkit-scrollbar {
-  width: 12px; /* Width of the scrollbar */
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #000; /* Background of the scrollbar track */
+  background: #000;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #e50914; /* Color of the scrollbar thumb */
-  border-radius: 10px; /* Roundness of the scrollbar thumb */
-  border: 3px solid #000; /* Padding around the scrollbar thumb */
+  background-color: #e50914;
+  border-radius: 10px;
+  border: 3px solid #000;
 }
 
 /* For Firefox */

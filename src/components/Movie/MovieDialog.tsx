@@ -71,9 +71,8 @@ export function MovieDialog({ movie: initialMovie, open, onOpenChange }: MovieDi
   }, [currentMovie.id, open]);
 
   const handlePlayClick = () => {
-    console.log('Navigating to trailer page with movie title:', movieDetails?.title); // Debugging
-    onOpenChange(false); // Close the dialog
-    navigate(`/watch/${movieDetails?.id}`); // Navigate to the trailer page with the correct movie ID
+    onOpenChange(false);
+    navigate(`/watch/${movieDetails?.id}`);
   };
 
   const handleRecommendedMovieClick = (selectedMovie: Movie) => {
@@ -100,7 +99,7 @@ export function MovieDialog({ movie: initialMovie, open, onOpenChange }: MovieDi
 
             <div className="relative md:absolute md:inset-0 flex flex-col bg-zinc-900 md:bg-inherit">
               <div className="flex-1 flex items-end justify-start mb-1 mt-4 ">
-                <DialogTitle className="text-white text-4xl md:text-5xl font-bold text-start px-4">
+                <DialogTitle className="text-white text-3xl md:text-5xl font-bold text-start px-4">
                   {movieDetails?.title || currentMovie.title}
                 </DialogTitle>
               </div>
@@ -137,7 +136,7 @@ export function MovieDialog({ movie: initialMovie, open, onOpenChange }: MovieDi
           </div>
 
           <div className="p-6 bg-zinc-900">
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-0 md:gap-8">
               <div>
                 <p className="text-white/90 line-clamp-3 text-sm sm:text-base mb-8">
                   {movieDetails?.overview || currentMovie.overview}
@@ -176,7 +175,7 @@ export function MovieDialog({ movie: initialMovie, open, onOpenChange }: MovieDi
                     key={recommendedMovie.id}
                     movie={recommendedMovie}
                     onClick={handleRecommendedMovieClick}
-                    usePosters={true}
+                    usePosters
                   />
                 ))}
               </div>

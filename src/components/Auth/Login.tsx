@@ -5,29 +5,19 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/useAuth';
 
-/**
- * LoginForm Component
- *
- * This component renders a login form and handles the authentication process.
- * It manages form state, handles user input, and triggers the login mutation.
- */
 export default function LoginForm() {
-  // State to store form input values
   const [credentials, setCredentials] = useState({
     username: '',
     password: '',
   });
 
-  // Get login mutation and loading state from our custom hook
-  // - mutate: Function to call to perform login
-  // - isPending: Boolean indicating if login is in progress
   const { mutate: login, isPending } = useAuth();
 
   /**
    * Handle form submission
    * @param e - Form event
    *
-   * Prevents default form submission and triggers login mutation
+   *
    */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,10 +25,10 @@ export default function LoginForm() {
   };
 
   /**
-   * Handle input changes
+   *
    * @param e - Input change event
    *
-   * Updates the credentials state when user types in inputs
+   *
    */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials((prev) => ({
@@ -49,12 +39,10 @@ export default function LoginForm() {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-transparent">
-      <div className="w-[414px] space-y-4 p-12 px-16 bg-black/45">
-        <h1 className="text-[32px] font-medium text-white mb-7">Sign In</h1>
+      <div className="w-[344px] md:w-[414px] space-y-4 p-12 px-16 bg-black/45">
+        <h1 className="text-[32px] font-medium text-white mb-2">Sign In</h1>
 
-        {/* Form with submit handler */}
         <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Username input field */}
           <div>
             <h2 className="text-sm mb-1">
               Username: <span className="text-gray-400">( mor_2314 )</span>{' '}
@@ -70,7 +58,6 @@ export default function LoginForm() {
             />
           </div>
 
-          {/* Password input field */}
           <div>
             <h2 className="text-sm mb-1">
               Password: <span className="text-gray-400">( 83r5^_ ) </span>
@@ -86,7 +73,6 @@ export default function LoginForm() {
             />
           </div>
 
-          {/* Submit button with loading state */}
           <Button
             type="submit"
             variant="long"
@@ -103,7 +89,6 @@ export default function LoginForm() {
             )}
           </Button>
 
-          {/* Divider with "OR" text */}
           <div className="relative py-2">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-zinc-800" />
@@ -113,7 +98,6 @@ export default function LoginForm() {
             </div>
           </div>
 
-          {/* Alternative sign-in option */}
           <Button
             variant="secondary"
             className="w-full h-[40px] bg-[#454545] hover:bg-[#4f4f4f] text-white font-normal text-base rounded-[4px] border-0"
@@ -121,7 +105,6 @@ export default function LoginForm() {
             Use a Sign-In Code
           </Button>
 
-          {/* Password recovery link */}
           <a
             href="/forgot-password"
             className="block text-[13px] text-zinc-400 hover:underline text-center mt-4"
@@ -129,7 +112,6 @@ export default function LoginForm() {
             Forgot Password?
           </a>
 
-          {/* Remember me checkbox */}
           <div className="flex items-center space-x-1 mt-2">
             <Checkbox
               id="remember"
@@ -140,7 +122,6 @@ export default function LoginForm() {
             </label>
           </div>
 
-          {/* Additional information and links */}
           <div className="space-y-3 mt-4">
             <p className="text-[13px] text-zinc-400">
               New to Netflix?{' '}

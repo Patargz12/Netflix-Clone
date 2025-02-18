@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Bell, ChevronDown, LogOut, Menu, Search, User, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Bell, ChevronDown, LogOut, Menu, Search, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -50,7 +53,10 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
   ];
 
   return (
-    <nav
+    <motion.nav
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
       className={cn(
         'fixed top-0 w-full z-50 transition-colors duration-300',
         isScrolled ? 'bg-background' : 'bg-transparent'
@@ -59,44 +65,69 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
       <div className="max-w-full mx-4 md:mx-24 flex transition justify-between items-center px-6 py-8">
         {/* Left Section */}
         <div className="flex items-center space-x-2 md:space-x-9">
-          <img
+          <motion.img
             src="/images/netflix_logo.png"
             alt="Netflix Logo"
             className="h-8 w-auto hidden md:block object-contain"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
           />
 
-          <img
-            src="/images/small_netflix.png"
-            alt="Netflix Logo"
-            className="h-8 w-auto block md:hidden object-contain"
-          />
+          <AnimatePresence>
+            {!showSearch && (
+              <motion.img
+                src="/images/small_netflix.png"
+                alt="Netflix Logo"
+                className="h-8 w-auto block md:hidden object-contain"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              />
+            )}
+          </AnimatePresence>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-4">
-            {navLinks.map((link) => (
-              <a
+          <motion.div
+            className="hidden md:flex space-x-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, staggerChildren: 0.1 }}
+          >
+            {navLinks.map((link, index) => (
+              <motion.a
                 key={link.label}
                 href={link.href}
                 className="text-sm text-white/80 hover:text-white transition-colors"
                 aria-label={link.label}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * index }}
               >
                 {link.label}
-              </a>
+              </motion.a>
             ))}
-          </div>
+          </motion.div>
         </div>
 
         {/* Right Section */}
-        <div className="flex items-center space-x-4">
-          <div className="relative">
+        <motion.div
+          className="flex items-center space-x-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          <div className="relative h-10 flex items-center">
             {showSearch ? (
-              <div className="flex items-center bg-background/90 rounded-md">
+              <div className="flex items-center bg-background/90 rounded-md overflow-hidden">
                 <Input
                   type="search"
                   placeholder="Titles, people, genres"
-                  className="w-[200px] bg-transparent border-none focus-visible:ring-0 text-white placeholder:text-white/70"
+                  className="w-full h-10 bg-transparent border-none focus-visible:ring-0 text-white placeholder:text-white/70"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  variant="secondary"
                 />
                 <button
                   type="button"
@@ -113,7 +144,7 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
               <button
                 type="button"
                 onClick={() => setShowSearch(true)}
-                className="text-white hover:text-white/80 mt-2 transition-colors"
+                className="text-white hover:text-white/80 transition-colors"
                 aria-label="Search"
               >
                 <Search className="h-5 w-5" />
@@ -121,18 +152,25 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
             )}
           </div>
 
-          <button
+          <motion.button
             type="button"
             className="text-white hidden md:block hover:text-white/80 transition-colors"
             aria-label="Notifications"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
           >
             <Bell className="h-5 w-5" />
-          </button>
+          </motion.button>
 
           {/* Profile Section */}
-          <div className="flex items-center space-x-2">
+          <motion.div
+            className="flex items-center space-x-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
             <DropdownMenu modal={false}>
-              <DropdownMenuTrigger className="flex items-center space-x-1 focus:outline-none">
+              <DropdownMenuTrigger className="items-center hidden md:flex space-x-1 focus:outline-none">
                 <Avatar className="h-8 w-8">
                   <AvatarImage
                     src={profileImage || '/images/profile/user_profile.png'}
@@ -160,39 +198,58 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
             {/* Mobile Navigation */}
             <Sheet>
               <SheetTrigger asChild className="md:hidden">
-                <button
+                <motion.button
                   type="button"
                   className="text-white hover:text-white/80 transition-colors"
                   aria-label="Open menu"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   <Menu className="h-6 w-6" />
-                </button>
+                </motion.button>
               </SheetTrigger>
+
               <SheetContent
                 side="right"
                 className="w-[300px] sm:w-[350px] bg-background/95 backdrop-blur-sm"
               >
                 <SheetHeader>
-                  <SheetTitle className="text-left text-white">Menu</SheetTitle>
+                  <div className="flex flex-row space-x-4">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="/images/profile/user_profile.png" alt="Profile" />
+                      <AvatarFallback className="bg-muted">
+                        <span className="sr-only">Profile</span>
+                      </AvatarFallback>
+                    </Avatar>
+                    <SheetTitle className="text-left text-white mt-1">My Netflix</SheetTitle>
+                  </div>
                 </SheetHeader>
-                <div className="flex flex-col space-y-4 mt-8">
-                  {navLinks.map((link) => (
-                    <a
+                <motion.div
+                  className="flex flex-col space-y-4 mt-8"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2, staggerChildren: 0.1 }}
+                >
+                  {navLinks.map((link, index) => (
+                    <motion.a
                       key={link.label}
                       href={link.href}
                       className="text-lg text-white/80 hover:text-white transition-colors"
                       aria-label={link.label}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 * index }}
                     >
                       {link.label}
-                    </a>
+                    </motion.a>
                   ))}
-                </div>
+                </motion.div>
               </SheetContent>
             </Sheet>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 
