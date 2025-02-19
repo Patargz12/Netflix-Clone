@@ -11,7 +11,7 @@ import {
 
 export default function Navbar() {
   return (
-    <nav className="fixed top-0 z-50 w-full px-8 lg:px-4 py-4">
+    <nav className="absolute top-0 z-50 w-full px-8 lg:px-4 py-4">
       <div className="mx-auto flex max-w-7xl items-center justify-between mt-2">
         <a href="#" className="relative h-7 w-28">
           <img src="/images/netflix_logo.png" alt="Netflix" className="object-contain" />

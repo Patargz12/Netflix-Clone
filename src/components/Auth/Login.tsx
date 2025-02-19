@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,7 @@ export default function LoginForm() {
   });
 
   const { mutate: login, isPending } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
 
   /**
    * Handle form submission
@@ -35,6 +36,10 @@ export default function LoginForm() {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -62,15 +67,28 @@ export default function LoginForm() {
             <h2 className="text-sm mb-1">
               Password: <span className="text-gray-400">( 83r5^_ ) </span>
             </h2>
-            <Input
-              type="password"
-              name="password"
-              required
-              value={credentials.password}
-              onChange={handleChange}
-              placeholder="83r5^_"
-              className="h-[40px] bg-[#333333] border-0 rounded-[4px] text-white placeholder:text-[#8c8c8c] text-base px-5"
-            />
+            <div className="relative">
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                required
+                value={credentials.password}
+                onChange={handleChange}
+                placeholder="83r5^_"
+                className="h-[40px] bg-[#333333] border-0 rounded-[4px] text-white placeholder:text-[#8c8c8c] text-base px-5 pr-10"
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5 text-gray-400" />
+                ) : (
+                  <Eye className="h-5 w-5 text-gray-400" />
+                )}
+              </button>
+            </div>
           </div>
 
           <Button

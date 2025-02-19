@@ -1,4 +1,6 @@
-import { useState } from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import Content from '@/components/Cms/Content';
 import { Button } from '@/components/ui/button';
@@ -9,11 +11,36 @@ import GuestNavbar from '../components/Layouts/GuestNavbar';
 
 export function HomePage() {
   const [email, setEmail] = useState('');
+  const [showIntro, setShowIntro] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowIntro(false);
+    }, 5000); // 5 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Email submitted:', email);
   };
+
+  if (showIntro) {
+    return (
+      <div className="w-full h-screen bg-black flex items-center justify-center">
+        <video
+          autoPlay
+          muted
+          className="w-full h-full object-cover"
+          onEnded={() => setShowIntro(false)}
+        >
+          <source src="/videos/netflix_intro.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    );
+  }
 
   return (
     <>

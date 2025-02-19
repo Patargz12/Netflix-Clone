@@ -59,10 +59,12 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
       transition={{ duration: 0.5 }}
       className={cn(
         'fixed top-0 w-full z-50 transition-colors duration-300',
-        isScrolled ? 'bg-background' : 'bg-transparent'
+        isScrolled ? 'bg-background' : 'bg-transparent' // Update: Added bg-transparent
       )}
     >
-      <div className="max-w-full mx-4 md:mx-24 flex transition justify-between items-center px-6 py-8">
+      <div className="max-w-full mx-4 md:mx-24 flex justify-between items-center px-6 py-8">
+        {' '}
+        {/* Update: Adjusted div className */}
         {/* Left Section */}
         <div className="flex items-center space-x-2 md:space-x-9">
           <motion.img
@@ -110,7 +112,6 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
             ))}
           </motion.div>
         </div>
-
         {/* Right Section */}
         <motion.div
           className="flex items-center space-x-4"
@@ -120,11 +121,12 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
         >
           <div className="relative h-10 flex items-center">
             {showSearch ? (
-              <div className="flex items-center bg-background/90 rounded-md overflow-hidden">
+              <div className="flex items-center bg-background/90 rounded-md overflow-hidden w-full md:w-auto">
+                {' '}
+                {/* Update: Added w-full md:w-auto */}
                 <Input
-                  type="search"
                   placeholder="Titles, people, genres"
-                  className="w-full h-10 bg-transparent border-none focus-visible:ring-0 text-white placeholder:text-white/70"
+                  className="w-full h-10 bg-transparent border-none text-white placeholder:text-white/70"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   variant="secondary"

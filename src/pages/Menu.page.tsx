@@ -250,7 +250,7 @@ export const MenuPage = () => {
   if (isLoadingPopular && !searchQuery) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary" />
+        <div className="animate-spin text-primary-500 rounded-full h-32 w-32 border-b-2 border-primary" />
       </div>
     );
   }
@@ -283,7 +283,7 @@ export const MenuPage = () => {
 
         <div className="relative z-10 -mt-32 px-4 sm:px-6 lg:px-14">
           {searchQuery ? (
-            <div className="space-y-8">
+            <div className="">
               <MovieGrid
                 title={`Top Results for "${searchQuery}"`}
                 movies={searchResults || []}
