@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ProfileList } from '@/components/Cms/ProfileList';
 import { Button } from '@/components/ui/button';
 import { mockProfiles } from '@/data/profiles';
+import { useProfileStore } from '@/store/profileStore';
 import type { Profile, ProfilesState } from '@/types/profile/user';
 
 export function AccountsPage() {
@@ -14,6 +15,8 @@ export function AccountsPage() {
     error: null,
     profiles: [],
   });
+
+  const setProfile = useProfileStore((state) => state.setProfile);
 
   useEffect(() => {
     // Simulate API call
@@ -40,8 +43,8 @@ export function AccountsPage() {
   const navigate = useNavigate();
 
   const handleProfileSelect = (profile: Profile) => {
-    console.log('Selected profile:', profile);
-    navigate('/menu', { state: { profile } });
+    setProfile(profile);
+    navigate('/menu');
   };
 
   const handleAddProfile = () => {

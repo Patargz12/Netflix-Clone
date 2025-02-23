@@ -13,6 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { useProfileStore } from '@/store/profileStore';
 import { useSearchStore } from '@/store/searchStore';
 
 interface AuthNavbarProps {
@@ -23,6 +24,7 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const { searchQuery, setSearchQuery } = useSearchStore();
+  const profile = useProfileStore((state) => state.profile);
 
   // Handle navbar background on scroll
   React.useEffect(() => {
@@ -175,7 +177,7 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
               <DropdownMenuTrigger className="items-center hidden md:flex space-x-1 focus:outline-none">
                 <Avatar className="h-8 w-8">
                   <AvatarImage
-                    src={profileImage || '/images/profile/user_profile.png'}
+                    src={profile?.imageUrl || '/images/profile/user_profile.png'}
                     alt="Profile"
                   />
                   <AvatarFallback className="bg-muted">
