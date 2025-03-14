@@ -15,6 +15,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { cn } from '@/lib/utils';
 import { useProfileStore } from '@/store/profileStore';
 import { useSearchStore } from '@/store/searchStore';
+import NavLink from './NavLink';
 
 interface AuthNavbarProps {
   profileImage?: string;
@@ -46,12 +47,8 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
   };
 
   const navLinks = [
-    { href: '#', label: 'Home' },
-    { href: '#', label: 'TV Shows' },
-    { href: '#', label: 'Movies' },
-    { href: '#', label: 'New & Popular' },
-    { href: '#', label: 'My List' },
-    { href: '#', label: 'Browse By Languages' },
+    { href: 'menu', label: 'Home' },
+    { href: 'tv', label: 'TV Shows' },
   ];
 
   return (
@@ -61,12 +58,10 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
       transition={{ duration: 0.5 }}
       className={cn(
         'fixed top-0 w-full z-50 transition-colors duration-300',
-        isScrolled ? 'bg-background' : 'bg-transparent' // Update: Added bg-transparent
+        isScrolled ? 'bg-background' : 'bg-transparent'
       )}
     >
       <div className="max-w-full mx-4 md:mx-24 flex justify-between items-center px-6 py-8">
-        {' '}
-        {/* Update: Adjusted div className */}
         {/* Left Section */}
         <div className="flex items-center space-x-2 md:space-x-9">
           <motion.img
@@ -100,20 +95,11 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
             transition={{ delay: 0.3, staggerChildren: 0.1 }}
           >
             {navLinks.map((link, index) => (
-              <motion.a
-                key={link.label}
-                href={link.href}
-                className="text-sm text-white/80 hover:text-white transition-colors"
-                aria-label={link.label}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * index }}
-              >
-                {link.label}
-              </motion.a>
+              <NavLink key={link.label} href={link.href} label={link.label} />
             ))}
           </motion.div>
         </div>
+
         {/* Right Section */}
         <motion.div
           className="flex items-center space-x-4"
@@ -235,17 +221,12 @@ const AuthNavbar = ({ profileImage }: AuthNavbarProps) => {
                   transition={{ delay: 0.2, staggerChildren: 0.1 }}
                 >
                   {navLinks.map((link, index) => (
-                    <motion.a
+                    <NavLink
                       key={link.label}
                       href={link.href}
-                      className="text-lg text-white/80 hover:text-white transition-colors"
-                      aria-label={link.label}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.1 * index }}
-                    >
-                      {link.label}
-                    </motion.a>
+                      label={link.label}
+                      className="text-lg"
+                    />
                   ))}
                 </motion.div>
               </SheetContent>

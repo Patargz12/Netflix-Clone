@@ -4,6 +4,7 @@ import { HomePage } from './pages/Home.page';
 import { LoginPage } from './pages/Login.page';
 import { MenuPage } from './pages/Menu.page';
 import { TrailerPage } from './pages/Trailer.page';
+import { TVPage } from './pages/TV.page';
 
 const router = createBrowserRouter([
   {
@@ -23,8 +24,12 @@ const router = createBrowserRouter([
     element: <MenuPage />,
   },
   {
-    path: '/watch/:movieId',
+    path: '/watch/:mediaType/:id',
     element: <TrailerPage />,
+  },
+  {
+    path: '/tv',
+    element: <TVPage />,
   },
 ]);
 

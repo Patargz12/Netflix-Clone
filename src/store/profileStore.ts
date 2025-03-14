@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-
 import { Profile } from "@/types/profile/user";
 
 interface ProfileState {
@@ -11,3 +10,4 @@ export const useProfileStore = create<ProfileState>((set) => ({
     profile: null,
     setProfile: (profile: Profile) => set({ profile }),
 }))
+

@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { Play, Volume2, VolumeX } from 'lucide-react';
 import ReactPlayer from 'react-player/youtube';
 import { Button } from '@/components/ui/button';
-import { Movie, MovieVideo } from '@/types/movie';
+import type { Movie, MovieVideo } from '@/types/movie';
+import type { TVAsMovie } from '@/types/tv';
+import { getMediaEndpoint, getMediaId } from '@/utils/tvAdapter';
 
 interface FeaturedMovieProps {
-  movie: Movie;
+  movie: Movie | TVAsMovie;
   onPlayClick: () => void;
 }
 
@@ -18,16 +20,16 @@ export function FeaturedMovie({ movie, onPlayClick }: FeaturedMovieProps) {
     const fetchVideo = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movie.id}/videos?language=en-US`,
-          {
-            headers: {
-              accept: 'application/json',
-              Authorization:
-                'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZjE0OGFmYzBmNTI3MzViYzViMzllYmMwNmU3ZDFkYiIsIm5iZiI6MTY2MjM0MjYzMi45NjcsInN1YiI6IjYzMTU1NWU4OTQwOGVjMDA3YmVkM2EwZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3nQoagcQ9Vok-Gll6iOjVMiCZgtsyM5K8VbRjw1WGbE',
-            },
-          }
-        );
+        // Use the correct videos endpoint based on media type
+        const videosEndpoint = getMediaEndpoint(movie, '/videos?language=en-US');
+
+        const response = await fetch(videosEndpoint, {
+          headers: {
+            accept: 'application/json',
+            Authorization:
+              'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZjE0OGFmYzBmNTI3MzViYzViMzllYmMwNmU3ZDFkYiIsIm5iZiI6MTY2MjM0MjYzMi45NjcsInN1YiI6IjYzMTU1NWU4OTQwOGVjMDA3YmVkM2EwZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3nQoagcQ9Vok-Gll6iOjVMiCZgtsyM5K8VbRjw1WGbE',
+          },
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -55,7 +57,15 @@ export function FeaturedMovie({ movie, onPlayClick }: FeaturedMovieProps) {
     if (movie?.id) {
       fetchVideo();
     }
-  }, [movie.id]);
+  }, [movie.id, movie]);
+
+  // Get the title based on whether it's a movie or TV show
+  const getTitle = () => {
+    if ('media_type' in movie && movie.media_type === 'tv') {
+      return movie.title || movie.original_name;
+    }
+    return movie.title;
+  };
 
   return (
     <div className="relative h-[100vh] w-full overflow-hidden">
@@ -106,7 +116,7 @@ export function FeaturedMovie({ movie, onPlayClick }: FeaturedMovieProps) {
         ) : (
           <img
             src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-            alt={movie.title}
+            alt={getTitle()}
             className="w-full h-full object-cover"
           />
         )}
@@ -116,9 +126,7 @@ export function FeaturedMovie({ movie, onPlayClick }: FeaturedMovieProps) {
 
       <div className="relative h-full container mx-auto flex flex-col justify-end pb-16 pt-0 px-4 sm:px-6">
         <div className="max-w-3xl space-y-4 ml-2 md:ml-10">
-          <h1 className="text-2xl md:text-6xl font-bold tracking-tight text-white">
-            {movie.title}
-          </h1>
+          <h1 className="text-2xl md:text-6xl font-bold tracking-tight text-white">{getTitle()}</h1>
           <p className="text-md text-white/80 max-w-2xl line-clamp-3">{movie.overview}</p>
           <div className="flex gap-4 flex-wrap pb-24">
             <Button size="lg" className="sm:w-auto" onClick={onPlayClick}>

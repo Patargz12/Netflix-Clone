@@ -30,7 +30,6 @@ const fetchMovies = async (endpoint: string): Promise<MovieResponse> => {
   return response.json();
 };
 
-// Search movies from TMDB
 const searchMovies = async (query: string): Promise<Movie[]> => {
   if (!query) {
     return [];
@@ -59,7 +58,6 @@ const searchMovies = async (query: string): Promise<Movie[]> => {
   return data.results;
 };
 
-// Get similar movies
 const getSimilarMovies = async (movieId: number): Promise<Movie[]> => {
   if (!movieId) {
     return [];
@@ -86,7 +84,6 @@ const getSimilarMovies = async (movieId: number): Promise<Movie[]> => {
   return data.results;
 };
 
-// Get recommended movies
 const getRecommendedMovies = async (movieId: number): Promise<Movie[]> => {
   if (!movieId) {
     return [];
@@ -113,38 +110,24 @@ const getRecommendedMovies = async (movieId: number): Promise<Movie[]> => {
   return data.results;
 };
 
-// Genre IDs from TMDB
-const GENRE_IDS = {
-  horror: 27,
-  drama: 18,
-  romance: 10749,
-  animation: 16,
-  family: 10751,
-  adventure: 12,
-  fantasy: 14,
-  comedy: 35,
-};
-
 export const MenuPage = () => {
   const { setMovies, selectedMovie, setSelectedMovie } = useMovieStore();
   const { searchQuery } = useSearchStore();
   const [showMovieDialog, setShowMovieDialog] = React.useState(false);
+  const [dialogMovie, setDialogMovie] = React.useState<Movie | null>(null);
 
-  // Fetch search results
   const { data: searchResults, isLoading: isSearching } = useQuery({
     queryKey: ['search-movies', searchQuery],
     queryFn: () => searchMovies(searchQuery),
     enabled: !!searchQuery,
   });
 
-  // Fetch similar movies based on the first search result
   const { data: similarMovies } = useQuery({
     queryKey: ['similar-movies', searchResults?.[0]?.id],
     queryFn: () => getSimilarMovies(searchResults?.[0]?.id as number),
     enabled: !!searchResults?.[0]?.id && !!searchQuery,
   });
 
-  // Fetch recommended movies based on the first search result
   const { data: recommendedMovies } = useQuery({
     queryKey: ['recommended-movies', searchResults?.[0]?.id],
     queryFn: () => getRecommendedMovies(searchResults?.[0]?.id as number),
@@ -167,69 +150,16 @@ export const MenuPage = () => {
     queryFn: () => fetchMovies('https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1'),
   });
 
-  const { data: horrorMovies } = useQuery({
-    queryKey: ['horror-movies'],
+  const { data: nowPlayingMovies } = useQuery({
+    queryKey: ['now-playing-movies'],
     queryFn: () =>
-      fetchMovies(
-        `https://api.themoviedb.org/3/discover/movie?with_genres=${GENRE_IDS.horror}&language=en-US&page=1`
-      ),
+      fetchMovies('https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1'),
   });
 
-  const { data: dramaMovies } = useQuery({
-    queryKey: ['drama-movies'],
-    queryFn: () =>
-      fetchMovies(
-        `https://api.themoviedb.org/3/discover/movie?with_genres=${GENRE_IDS.drama}&language=en-US&page=1`
-      ),
-  });
-
-  const { data: romanceMovies } = useQuery({
-    queryKey: ['romance-movies'],
-    queryFn: () =>
-      fetchMovies(
-        `https://api.themoviedb.org/3/discover/movie?with_genres=${GENRE_IDS.romance}&language=en-US&page=1`
-      ),
-  });
-
-  const { data: animeMovies } = useQuery({
-    queryKey: ['anime-movies'],
-    queryFn: () =>
-      fetchMovies(
-        `https://api.themoviedb.org/3/discover/movie?with_genres=${GENRE_IDS.animation}&language=en-US&page=1`
-      ),
-  });
-
-  const { data: familyMovies } = useQuery({
-    queryKey: ['family-movies'],
-    queryFn: () =>
-      fetchMovies(
-        `https://api.themoviedb.org/3/discover/movie?with_genres=${GENRE_IDS.family}&language=en-US&page=1`
-      ),
-  });
-
-  const { data: adventureMovies } = useQuery({
-    queryKey: ['adventure-movies'],
-    queryFn: () =>
-      fetchMovies(
-        `https://api.themoviedb.org/3/discover/movie?with_genres=${GENRE_IDS.adventure}&language=en-US&page=1`
-      ),
-  });
-
-  const { data: fantasyMovies } = useQuery({
-    queryKey: ['fantasy-movies'],
-    queryFn: () =>
-      fetchMovies(
-        `https://api.themoviedb.org/3/discover/movie?with_genres=${GENRE_IDS.fantasy}&language=en-US&page=1`
-      ),
-  });
-
-  const { data: comedyMovies } = useQuery({
-    queryKey: ['comedy-movies'],
-    queryFn: () =>
-      fetchMovies(
-        `https://api.themoviedb.org/3/discover/movie?with_genres=${GENRE_IDS.comedy}&language=en-US&page=1`
-      ),
-  });
+  const handleMovieSelect = (movie: Movie) => {
+    setDialogMovie(movie);
+    setShowMovieDialog(true);
+  };
 
   // Update store when data changes
   React.useEffect(() => {
@@ -246,7 +176,7 @@ export const MenuPage = () => {
     }
   }, [popularMovies, searchResults, searchQuery, selectedMovie, setMovies, setSelectedMovie]);
 
-  // Loading state for initial load only
+  // Loading states and error handling
   if (isLoadingPopular && !searchQuery) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -272,12 +202,17 @@ export const MenuPage = () => {
       <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
         {selectedMovie && (
           <>
-            <FeaturedMovie movie={selectedMovie} onPlayClick={() => setShowMovieDialog(true)} />
-            <MovieDialog
+            <FeaturedMovie
               movie={selectedMovie}
-              open={showMovieDialog}
-              onOpenChange={setShowMovieDialog}
+              onPlayClick={() => handleMovieSelect(selectedMovie)}
             />
+            {dialogMovie && (
+              <MovieDialog
+                movie={dialogMovie}
+                open={showMovieDialog}
+                onOpenChange={setShowMovieDialog}
+              />
+            )}
           </>
         )}
 
@@ -287,7 +222,7 @@ export const MenuPage = () => {
               <MovieGrid
                 title={`Top Results for "${searchQuery}"`}
                 movies={searchResults || []}
-                onMovieSelect={setSelectedMovie}
+                onMovieSelect={handleMovieSelect}
                 onPlayClick={() => setShowMovieDialog(true)}
                 usePosters
                 isLoading={isSearching}
@@ -297,7 +232,7 @@ export const MenuPage = () => {
                 <MovieGrid
                   title="More Like This"
                   movies={similarMovies}
-                  onMovieSelect={setSelectedMovie}
+                  onMovieSelect={handleMovieSelect}
                   onPlayClick={() => setShowMovieDialog(true)}
                   usePosters
                 />
@@ -307,7 +242,7 @@ export const MenuPage = () => {
                 <MovieGrid
                   title="Recommended"
                   movies={recommendedMovies}
-                  onMovieSelect={setSelectedMovie}
+                  onMovieSelect={handleMovieSelect}
                   onPlayClick={() => setShowMovieDialog(true)}
                   usePosters
                 />
@@ -318,7 +253,7 @@ export const MenuPage = () => {
               <PopularGrid
                 title="Popular Now"
                 movies={popularMovies?.results || []}
-                onMovieSelect={setSelectedMovie}
+                onMovieSelect={handleMovieSelect}
                 usePosters
               />
 
@@ -326,7 +261,7 @@ export const MenuPage = () => {
                 <MovieGrid
                   title="Top Rated"
                   movies={topRatedMovies.results}
-                  onMovieSelect={setSelectedMovie}
+                  onMovieSelect={handleMovieSelect}
                   onPlayClick={() => setShowMovieDialog(true)}
                   usePosters
                 />
@@ -334,89 +269,19 @@ export const MenuPage = () => {
 
               {upcomingMovies?.results && (
                 <MovieGrid
-                  title="Coming Soon"
+                  title="Upcoming"
                   movies={upcomingMovies.results}
-                  onMovieSelect={setSelectedMovie}
+                  onMovieSelect={handleMovieSelect}
                   onPlayClick={() => setShowMovieDialog(true)}
                   usePosters
                 />
               )}
 
-              {familyMovies?.results && (
+              {nowPlayingMovies?.results && (
                 <MovieGrid
-                  title="Family & Kids"
-                  movies={familyMovies.results}
-                  onMovieSelect={setSelectedMovie}
-                  onPlayClick={() => setShowMovieDialog(true)}
-                  usePosters
-                />
-              )}
-
-              {adventureMovies?.results && (
-                <MovieGrid
-                  title="Adventure"
-                  movies={adventureMovies.results}
-                  onMovieSelect={setSelectedMovie}
-                  onPlayClick={() => setShowMovieDialog(true)}
-                  usePosters
-                />
-              )}
-
-              {fantasyMovies?.results && (
-                <MovieGrid
-                  title="Fantasy"
-                  movies={fantasyMovies.results}
-                  onMovieSelect={setSelectedMovie}
-                  onPlayClick={() => setShowMovieDialog(true)}
-                  usePosters
-                />
-              )}
-
-              {horrorMovies?.results && (
-                <MovieGrid
-                  title="Horror"
-                  movies={horrorMovies.results}
-                  onMovieSelect={setSelectedMovie}
-                  onPlayClick={() => setShowMovieDialog(true)}
-                  usePosters
-                />
-              )}
-
-              {dramaMovies?.results && (
-                <MovieGrid
-                  title="Drama"
-                  movies={dramaMovies.results}
-                  onMovieSelect={setSelectedMovie}
-                  onPlayClick={() => setShowMovieDialog(true)}
-                  usePosters
-                />
-              )}
-
-              {romanceMovies?.results && (
-                <MovieGrid
-                  title="Romance"
-                  movies={romanceMovies.results}
-                  onMovieSelect={setSelectedMovie}
-                  onPlayClick={() => setShowMovieDialog(true)}
-                  usePosters
-                />
-              )}
-
-              {animeMovies?.results && (
-                <MovieGrid
-                  title="Animation"
-                  movies={animeMovies.results}
-                  onMovieSelect={setSelectedMovie}
-                  onPlayClick={() => setShowMovieDialog(true)}
-                  usePosters
-                />
-              )}
-
-              {comedyMovies?.results && (
-                <MovieGrid
-                  title="Comedy"
-                  movies={comedyMovies.results}
-                  onMovieSelect={setSelectedMovie}
+                  title="Now Playing"
+                  movies={nowPlayingMovies.results}
+                  onMovieSelect={handleMovieSelect}
                   onPlayClick={() => setShowMovieDialog(true)}
                   usePosters
                 />
