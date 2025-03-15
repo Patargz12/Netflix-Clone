@@ -29,7 +29,7 @@ export function getMediaId(item: Movie | TVAsMovie): { id: number; mediaType: 'm
     }
     // For search results, they may not have media_type explicitly set
     // Check if the item has original_name which is specific to TV shows
-    if ('original_name' in item && item.original_name && !('media_type' in item)) {
+    if ('original_name' in item && item.original_name) {
         return { id: item.id, mediaType: 'tv' };
     }
     return { id: item.id, mediaType: 'movie' };

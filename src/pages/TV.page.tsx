@@ -127,7 +127,6 @@ const TV_GENRE_IDS = {
 };
 
 export const TVPage = () => {
-  const navigate = useNavigate();
   const { setTVShows, selectedShow, setSelectedShow } = useTVStore();
   const { searchQuery } = useSearchStore();
   const [showDialog, setShowDialog] = useState(false);
